@@ -1,104 +1,125 @@
-//email validation
-const email = document.getElementById("email")
-email.addEventListener("input", () => { validate(email) })
-function validate(element) {
-    if (element.validity.typeMismatch) {
-        element.setCustomValidity("Invalid email");
-        element.reportValidity();
-    }
-    else {
-        element.setCustomValidity('');
-    }
-}
 
-//dob validation between 18 and 55
-const dob = document.getElementById("dob")
-const today = new Date();
+let form = document.getElementById("form");
 
-// Calculate the maximum and minimum allowable dates
-const minDate = new Date(today.getFullYear() - 55, today.getMonth(), today.getDate());
-const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+// localStorage.clear();
+// let Entries = [];
 
-console.log(maxDate.getFullYear())
+const retriveEntries = () => {
+    let entries = localStorage.getItem("userEntry");
 
-dob.addEventListener("input", () => { dobvalidate(dob) })
-function dobvalidate(dob) {
-    let Date2 = dob.value.split("-");
-    let year = Date2[0];
-    let month = Date2[1];
-    let date = Date2[2];
-    let birthdate = new Date(year, month, date);
-    if (birthdate < minDate || birthdate > maxDate) {
-        dob.setCustomValidity("age must between 55 and 18");
-        dob.reportValidity();
+    if (entries) {
+        entries = JSON.parse(entries);
     } else {
-        dob.setCustomValidity("");
+        entries = [];
     }
-}
-function ifdata() {
-    let data = localStorage.getItem("data")
-    if (data) {
-        data = JSON.parse(data)
-        return data
-    } else {
-        data = []
-        return data
-    }
-}
-let userdata = ifdata()
-//local storage of data
-const saveForm = (event) => {
+    return entries;
+};
 
+let Entries = retriveEntries();
+
+const displayEntries = () => {
+    const entries = retriveEntries();
+
+    const rows = entries
+        .map((entry) => {
+            const name = `<td class="td">${entry.name}</td>`;
+            const email = `<td class="td">${entry.email}</td>`;
+            const password = `<td class="td">${entry.password}</td>`;
+            const dob = `<td class="td">${entry.dob}</td>`;
+            const accseptConditions = `<td class="td">${entry.accseptConditions}</td>`;
+
+            const row = `<tr>${name} ${email} ${password} ${dob} ${accseptConditions}</tr>`;
+            return row;
+        })
+        .join("\n");
+
+    let tableDiv = document.getElementById("tableDiv");
+
+    // <th class="th">Name</th> inside oneMore head for name
+    tableDiv.innerHTML = `<table class="table" border="2">
+  <tr>
+    <th class="th">Name</th>
+    <th class="th">Email</th>
+    <th class="th">Password</th>
+    <th class="th">Dob</th>
+    <th class="th">Accepted terms?</th>
+  </tr>
+    ${rows}
+  </table>`;
+};
+
+// const saveUserFrom = () => {
+const saveUserFrom = (event) => {
     event.preventDefault();
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const dob = document.getElementById("dob").value;
 
-    const acceptedTermsAndCondition = document.getElementById("acceptTerms").checked;
-    const entry = {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let dob = document.getElementById("dob").value;
+    let accseptConditions = document.getElementById("agree").checked;
+
+    let entry_obj = {
         name,
         email,
         password,
         dob,
-        acceptedTermsAndCondition
+        accseptConditions,
     };
-    userdata.push(entry);
-    localStorage.setItem("data", JSON.stringify(userdata));
-    console.log(localStorage.getItem("data"))
-    displaydata()
-}
-let form = document.getElementById("box")
-form.addEventListener("submit", saveForm);
 
+    Entries.push(entry_obj);
 
-//table data
-const displaydata = () => {
-    let data = localStorage.getItem("data");
-    if (data) {
-        data = JSON.parse(data)
+    localStorage.setItem("userEntry", JSON.stringify(Entries));
+
+    displayEntries();
+};
+
+form.addEventListener("submit", saveUserFrom);
+
+displayEntries();
+
+// Add additional validations to the date input field so that it accepts date of birth for people between ages 18 and 55 only. You'll need to figure out how to do this.
+
+function getAge(today, birthDate) {
+    // var today = new Date();
+    // var birthDate = new Date(DOB);
+
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
     }
-    const tableEntries = data.map((entry) => {
-        const name = `<td>${entry.name}</td>`;
-        const email = `<td>${entry.email}</td>`;
-        const password = `<td>${entry.password}</td>`;
-        const dob = `<td >${entry.dob}</td>`;
-        const accept = `<td>${entry.acceptedTermsAndCondition}</td>`;
-        const row = `<tr>${name} ${email} ${password} ${dob} ${accept}</tr>`;
-        return row;
-    }).join("\n");
-
-    const table = `<table border="2">
-    <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th >Password</th>
-    <th>Dob</th>
-    <th>Accepted terms?</th>
-    </tr>
-    ${tableEntries}</table>`;
-    let details = document.getElementById("entries");
-    details.innerHTML = table;
+    return age;
 }
 
-displaydata()
+let dateELE = document.getElementById("dob");
+
+dateELE.addEventListener("change", () => {
+    let [year, month, date] = document.getElementById("dob").value.split("-");
+
+    let dob = new Date(year, month, date);
+    let Today = new Date();
+
+    age = getAge(Today, dob);
+
+    dateELE.style.border = "2px solid rgba(0, 0, 0, 0.4)";
+    if (age < 18 || age > 55) {
+        dateELE.setCustomValidity("Your age is not lies between 18 and 55");
+        dateELE.style.border = "2px solid red";
+        return;
+    } else {
+        dateELE.setCustomValidity("");
+    }
+});
+
+const email = document.getElementById("email");
+
+email.addEventListener("input", () => validate(email));
+
+function validate(ele) {
+    if (ele.validity.typeMismatch) {
+        ele.setCustomValidity("The Email is not in the right format!!!");
+        ele.reportValidity();
+    } else {
+        ele.setCustomValidity("");
+    }
+}

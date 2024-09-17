@@ -10,6 +10,7 @@ const port = argv.port || 3000;
 let homeContent = "";
 let projectContent = "";
 let registrationContent = "";
+let registrationScript = "";
 
 fs.readFile("home.html", (err, home) => {
     if (err) {
@@ -29,7 +30,13 @@ fs.readFile("registration.html",(err,registration)=>{
     if (err){
         throw err 
     }
-    registrationContent = registration;
+    registrationContent = registration.toString();
+})
+fs.readFile("script.js", (err, script) => {
+    if (err) {
+        throw err
+    }
+    registrationScript = script.toString();
 })
 
 http
@@ -44,6 +51,10 @@ http
             case "/registration":
                 response.write(registrationContent);
                 response.end;
+                break;
+            case "/script.js":
+                response.write(registrationScript);
+                response.end();
                 break;
             default:
                 response.write(homeContent);
