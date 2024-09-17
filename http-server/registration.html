@@ -1,50 +1,64 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Form </title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
 </head>
 
 <body>
-    <div class="conatiner">
-        <form id="box">
-            <div>
-                <h3 style="font-family:'Times New Roman', Times, serif;;">
-                    <center><u>Registration Form</u></center>
-                </h3>
-                <br><br>
-                <label for="name">Name:</label>
-                <input required type="text" id="name" name="name" placeholder="Name of student">
-                <br><br>
-                <label for="email">Email:</label>
-                <input required type="email" id="email" name="email" placeholder="example@gmail.com">
-                <br><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required placeholder="Password">
-                <br><br>
-                <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required placeholder="Name of student">
-                <br><br>
-                <input type="checkbox" id="acceptTerms" name="acceptTerms">
-                <label for="acceptTerms">Accept Terms & Conditions</label>
-                <br><br>
-                <button class="button" type="submit">
-                    <h4>Submit</h4>
-                </button>
-                <br><br>
-            </div>
-        </form>
-        <h4>ENTRIES</h4>
-        <table class="table mt-2" id="entries">
-            <thead>
+    <div class="box">
+        <form class="form" id="form">
+            <h2 align="center">Registration Form</h2>
+
+            <table class="tableForm" cellspacing="25px">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Dob</th>
-                    <th>Accepted terms?</th>
+                    <td><label for="name">Name :</label></td>
+                    <td>
+                        <input class="input" type="text" name="name" id="name" placeholder="Full Name" required />
+                    </td>
                 </tr>
-            </thead>
-            <tbody id="table_body"></tbody>
-        </table>
+                <tr>
+                    <td><label for="email">E-mail :</label></td>
+                    <td>
+                        <input class="input" type="email" name="email" id="email" placeholder="Email" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="name">Password :</label></td>
+                    <td>
+                        <input class="input" type="password" name="password" id="password" placeholder="Password"
+                            required />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="dob">Date Of Birth :</label></td>
+                    <td>
+                        <input style="width: 220px" class="input" type="date" name="dob" id="dob" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" name="agree" id="agree" />
+                        <label for="checkbox">Accespt Terms & Conditions</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn" type="submit">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="entry">
+        <h2 class="subHead">Entries</h2>
+        <div id="tableDiv"></div>
     </div>
 </body>
 
