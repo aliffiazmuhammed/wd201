@@ -5,7 +5,7 @@
   "main": "todo.js",
   "scripts": {
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +19,9 @@
     "prettier": "^3.3.3"
   },
   "lint-staged": {
-  "*.js": [
-    "eslint",
-    "prettier --write ."
-  ]
-}
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
+  }
 }
