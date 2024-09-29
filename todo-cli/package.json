@@ -5,7 +5,7 @@
   "main": "todo.js",
   "scripts": {
     "test": "jest",
-    "prepare": "husky"
+    "prepare": "husky init"
   },
   "author": "",
   "license": "ISC",
