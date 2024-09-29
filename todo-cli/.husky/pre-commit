@@ -1,1 +1,1 @@
- npm test
+ cd TODO-CLI && npm test
