@@ -1,1 +1,8 @@
- cd TODO-CLI && npm test
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run Prettier
+npx prettier --write .
+
+# Run Jest tests
+npx jest --bail
