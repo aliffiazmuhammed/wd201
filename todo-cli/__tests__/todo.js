@@ -1,60 +1,102 @@
-const todoList = require("../todo");
-let today = new Date().toLocaleDateString("en-CA");
+const todoList = require("../todo"); // Adjust the path as necessary
 
-const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
+describe("Todo List Functionality", () => {
+  let todos;
 
-describe("Test Todo List Function: ", () => {
-  beforeAll(() => {
-    add({
+  beforeEach(() => {
+    // Initialize a new todo list before each test
+    todos = todoList();
+  });
+
+  test("Creating a new todo", () => {
+    // Add a new todo
+    todos.add({
+      title: "Pay rent",
+      dueDate: new Date().toLocaleDateString("en-CA"),
+      completed: false,
+    });
+
+    // Check if the todo was added
+    expect(todos.all.length).toBe(1);
+    expect(todos.all[0].title).toBe("Pay rent");
+    expect(todos.all[0].completed).toBe(false);
+  });
+
+  test("Marking a todo as completed", () => {
+    // Add a new todo
+    todos.add({
+      title: "Service vehicle",
+      dueDate: new Date().toLocaleDateString("en-CA"),
+      completed: false,
+    });
+
+    // Mark the todo as completed
+    todos.markAsComplete(0);
+
+    // Check if the todo is marked as completed
+    expect(todos.all[0].completed).toBe(true);
+  });
+
+  test("Retrieval of overdue items", () => {
+    // Add overdue and current todos
+    todos.add({
       title: "Submit assignment",
-      dueDate: new Date().toLocaleDateString("en-CA"), // Use consistent date format
+      dueDate: new Date(Date.now() - 86400000).toLocaleDateString("en-CA"),
       completed: false,
-    });
-  });
-
-  test("Test add Method: ", () => {
-    let length = all.length;
-    add({
-      title: "Pay electric bill",
-      dueDate: new Date().toLocaleDateString("en-CA"), // Use consistent date format
+    }); // Overdue
+    todos.add({
+      title: "Pay rent",
+      dueDate: new Date().toLocaleDateString("en-CA"),
       completed: false,
-    });
-    expect(all.length).toBe(length + 1);
+    }); // Due Today
+
+    // Get overdue items
+    const overdueItems = todos.overdue();
+
+    // Check if the correct items are retrieved
+    expect(overdueItems.length).toBe(1);
+    expect(overdueItems[0].title).toBe("Submit assignment");
   });
 
-  test("Test markAsComplete Method: ", () => {
-    expect(all[0].completed).toBe(false);
-    markAsComplete(0);
-    expect(all[0].completed).toBe(true);
+  test("Retrieval of due today items", () => {
+    // Add due today and overdue todos
+    todos.add({
+      title: "Pay rent",
+      dueDate: new Date().toLocaleDateString("en-CA"),
+      completed: false,
+    }); // Due Today
+    todos.add({
+      title: "Submit assignment",
+      dueDate: new Date(Date.now() - 86400000).toLocaleDateString("en-CA"),
+      completed: false,
+    }); // Overdue
+
+    // Get due today items
+    const dueTodayItems = todos.dueToday();
+
+    // Check if the correct items are retrieved
+    expect(dueTodayItems.length).toBe(1);
+    expect(dueTodayItems[0].title).toBe("Pay rent");
   });
 
-  test("Test Overdue Method: ", () => {
-    let overdueToDoList = overdue();
-    expect(
-      overdueToDoList.every((todo) => {
-        return new Date(todo.dueDate) > new Date(); // Compare using Date objects
-      }),
-    ).toBe(true);
-  });
+  test("Retrieval of due later items", () => {
+    // Add due later and current todos
+    todos.add({
+      title: "File taxes",
+      dueDate: new Date(Date.now() + 86400000).toLocaleDateString("en-CA"),
+      completed: false,
+    }); // Due Tomorrow
+    todos.add({
+      title: "Pay rent",
+      dueDate: new Date().toLocaleDateString("en-CA"),
+      completed: false,
+    }); // Due Today
 
-  test("Test dueToday Method: ", () => {
-    let toDosDueTodayList = dueToday();
-    expect(
-      toDosDueTodayList.every((todo) => {
-        return (
-          new Date(todo.dueDate).toLocaleDateString("en-CA") ===
-          new Date().toLocaleDateString("en-CA")
-        ); // Compare using Date objects
-      }),
-    ).toBe(true);
-  });
+    // Get due later items
+    const dueLaterItems = todos.dueLater();
 
-  test("Test dueLater Method: ", () => {
-    let toDosDueLaterList = dueLater();
-    expect(
-      toDosDueLaterList.every((todo) => {
-        return new Date(todo.dueDate) > new Date(); // Compare using Date objects
-      }),
-    ).toBe(true);
+    // Check if the correct items are retrieved
+    expect(dueLaterItems.length).toBe(1);
+    expect(dueLaterItems[0].title).toBe("File taxes");
   });
 });
