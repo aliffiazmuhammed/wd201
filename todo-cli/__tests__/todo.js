@@ -1,5 +1,5 @@
 const todoList = require("../todo");
-let today = new Date().toLocaleDateString("en-CA");
+let today = new Date().toISOString().split("T")[0]; // Use ISO date in the format YYYY-MM-DD
 
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
@@ -7,7 +7,7 @@ describe("Test Todo List Function: ", () => {
   beforeAll(() => {
     add({
       title: "Submit assignment",
-      dueDate: new Date().toLocaleDateString("en-CA"),
+      dueDate: new Date().toISOString().split("T")[0], // Use only the date part
       completed: false,
     });
   });
@@ -16,7 +16,7 @@ describe("Test Todo List Function: ", () => {
     let length = all.length;
     add({
       title: "Pay electric bill",
-      dueDate: new Date().toLocaleDateString("en-CA"),
+      dueDate: new Date().toISOString().split("T")[0], // Use only the date part
       completed: false,
     });
     expect(all.length).toBe(length + 1);
@@ -32,7 +32,7 @@ describe("Test Todo List Function: ", () => {
     let overdueToDoList = overdue();
     expect(
       overdueToDoList.every((todo) => {
-        return todo.dueDate < new Date().toLocaleDateString("en-CA");
+        return todo.dueDate < new Date().toISOString().split("T")[0]; // Compare the date parts
       }),
     ).toBe(true);
   });
@@ -41,7 +41,7 @@ describe("Test Todo List Function: ", () => {
     let toDosDueTodayList = dueToday();
     expect(
       toDosDueTodayList.every((todo) => {
-        return todo.dueDate === new Date().toLocaleDateString("en-CA");
+        return todo.dueDate === new Date().toISOString().split("T")[0]; // Compare the date parts
       }),
     ).toBe(true);
   });
@@ -50,7 +50,7 @@ describe("Test Todo List Function: ", () => {
     let toDosDueLaterList = dueLater();
     expect(
       toDosDueLaterList.every((todo) => {
-        return todo.dueDate > new Date().toLocaleDateString("en-CA");
+        return todo.dueDate > new Date().toISOString().split("T")[0]; // Compare the date parts
       }),
     ).toBe(true);
   });
