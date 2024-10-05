@@ -7,11 +7,20 @@ describe("Test Todo List Function: ", () => {
     beforeAll(() => {
         add({
             title: "Submit assignment",
-            dueDate: new Date().toISOString("en-CA"),
+            dueDate: new Date().toLocaleDateString("en-CA"),  // Use consistent date format
             completed: false,
         });
     });
 
+    test("Test add Method: ", () => {
+        let length = all.length;
+        add({
+            title: "Pay electric bill",
+            dueDate: new Date().toLocaleDateString("en-CA"),  // Use consistent date format
+            completed: false,
+        });
+        expect(all.length).toBe(length + 1);
+    });
 
     test("Test markAsComplete Method: ", () => {
         expect(all[0].completed).toBe(false);
@@ -23,7 +32,7 @@ describe("Test Todo List Function: ", () => {
         let overdueToDoList = overdue();
         expect(
             overdueToDoList.every((todo) => {
-                return todo.dueDate < new Date().toISOString("en-CA");
+                return new Date(todo.dueDate) < new Date();  // Compare using Date objects
             })
         ).toBe(true);
     });
@@ -32,7 +41,7 @@ describe("Test Todo List Function: ", () => {
         let toDosDueTodayList = dueToday();
         expect(
             toDosDueTodayList.every((todo) => {
-                return todo.dueDate === new Date().toISOString("en-CA");
+                return new Date(todo.dueDate).toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA");  // Compare using Date objects
             })
         ).toBe(true);
     });
@@ -41,7 +50,7 @@ describe("Test Todo List Function: ", () => {
         let toDosDueLaterList = dueLater();
         expect(
             toDosDueLaterList.every((todo) => {
-                return todo.dueDate > new Date().toISOString("en-CA");
+                return new Date(todo.dueDate) > new Date();  // Compare using Date objects
             })
         ).toBe(true);
     });
