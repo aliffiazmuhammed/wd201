@@ -4,8 +4,7 @@
   "description": "",
   "main": "todo.js",
   "scripts": {
-    "test": "jest",
-    "prepare": "husky install .husky"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
