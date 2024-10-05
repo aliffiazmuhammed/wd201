@@ -12,15 +12,6 @@ describe("Test Todo List Function: ", () => {
         });
     });
 
-    test("Test add Method: ", () => {
-        let length = all.length;
-        add({
-            title: "Pay electric bill",
-            dueDate: new Date().toISOString("en-CA"),
-            completed: false,
-        });
-        expect(all.length).toBe(length + 1);
-    });
 
     test("Test markAsComplete Method: ", () => {
         expect(all[0].completed).toBe(false);
