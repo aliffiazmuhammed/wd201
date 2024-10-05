@@ -4,7 +4,10 @@ let today = new Date().toLocaleDateString("en-CA");
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
 describe("Test Todo List Function: ", () => {
-    beforeAll(() => {
+    beforeEach(() => {
+        // Clear the todos array before each test
+        all.length = 0;
+        // Add an initial todo item for testing
         add({
             title: "Submit assignment",
             dueDate: new Date().toLocaleDateString("en-CA"),
@@ -29,28 +32,45 @@ describe("Test Todo List Function: ", () => {
     });
 
     test("Test Overdue Method: ", () => {
+        // Add an overdue todo item
+        add({
+            title: "Overdue task",
+            dueDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"), // yesterday
+            completed: false,
+        });
+
         let overdueToDoList = overdue();
+
         expect(
             overdueToDoList.every((todo) => {
-                return todo.dueDate < new Date().toLocaleDateString("en-CA");
+                return new Date(todo.dueDate) < new Date();
             })
         ).toBe(true);
     });
 
     test("Test dueToday Method: ", () => {
         let toDosDueTodayList = dueToday();
+
         expect(
             toDosDueTodayList.every((todo) => {
-                return todo.dueDate === new Date().toLocaleDateString("en-CA");
+                return new Date(todo.dueDate).toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA");
             })
         ).toBe(true);
     });
 
     test("Test dueLater Method: ", () => {
+        // Add a todo item that is due tomorrow
+        add({
+            title: "Future task",
+            dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleDateString("en-CA"), // tomorrow
+            completed: false,
+        });
+
         let toDosDueLaterList = dueLater();
+
         expect(
             toDosDueLaterList.every((todo) => {
-                return todo.dueDate > new Date().toLocaleDateString("en-CA");
+                return new Date(todo.dueDate) > new Date();
             })
         ).toBe(true);
     });
